@@ -137,7 +137,7 @@ class SoldierCamera extends MonoBehaviour
 
 		if (leapEnabled == true)
 		{
-			// Make sure we reset teh idle timer if we are moving via Leap, otherwise, we enter into Orbit Mode with funny results
+			// Make sure we reset the idle timer if we are moving via Leap, otherwise, we enter into Orbit Mode with funny results
 			if(orbit && (Input.GetKeyDown(KeyCode.O) || pxsLeapInput.GetHandAxisStep("Horizontal") != 0.0 || pxsLeapInput.GetHandAxisStep("Depth") != 0.0 || soldierController.aim || soldierController.fire))
 			{
 				GoToOrbitMode(false);
