@@ -2,6 +2,7 @@
 * This is a Singleton class that emulates the axis input that most games have *
 * Version 0.2
 * Made it work with BootCamp Tutorial
+* introduced a GetHandAxisStep for use in navigation (where normally the keybaord is used)
 *
 * Version 0.1
 * initially published as part of LeanEnabledCarTutorial
@@ -106,6 +107,27 @@ public static class pxsLeapInput
 		return ret;
 	}
 	
+	public static float GetHandAxisStep(string axisName)
+	{
+		// Assume dead zone of -0.5 to 0.5
+		// always return -1, 0 or +1
+		float ret = GetHandAxisPrivate(axisName, true);
+		if (ret < -0.5F) 
+		{ 
+			ret = -1.0F;
+		}
+		else if (ret > 0.5F)
+		{
+			ret = 1.0F;
+		}
+		else
+		{
+			ret = 0;
+		}
+		return ret;
+	}
+	
+	
 	public static float GetHandAxisRaw(string axisName)
 	{
 		float ret = GetHandAxisPrivate(axisName, false);
@@ -133,8 +155,8 @@ public static class pxsLeapInput
 			case "Fire2":
 				ret =  (PalmNormal.x > 0.5) ; 
 				break;	
-			case "FireRotation1":
-				ret =  (PalmNormal.x < -0.5) ; 
+			case "RotationFire2":
+				ret =  (PalmNormal.x < -0.25) ; 
 				break;	
 			default:
 				break;
@@ -175,11 +197,11 @@ public static class pxsLeapInput
 				ret =  PalmPosition.y ; 
 				break;
 			case "Mouse X":
-				// rotation is preferred (more usable).  
-				// if using rotation for something else, can use Palmdirection by uncommenting below.
-				ret = ret = -2 * PalmNormal.x ;
-				// ret =  4 * (PalmDirection.x ) + 1.00F ;
-				m_Errors = "ret Mouse.x = " + ret.ToString();
+				// Uncomment below if using Rotation for Mouse X.
+				// ret = ret = -2 * PalmNormal.x ;
+				// Uncomment below if using Direction for Mouse X.
+				ret =  4 * (PalmDirection.x ) + 1.00F ;
+				// m_Errors = "ret Mouse.x = " + ret.ToString();
 				break;
 			case "Mouse Y":
 				// use z axis as this is the most promounced change when TITLTing a hand

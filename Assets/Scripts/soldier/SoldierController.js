@@ -22,7 +22,9 @@ class SoldierController extends MonoBehaviour
 	public var weaponSystem : GunManager;
 	public var minCarDistance : float;
 	// pxs Leap modifictaion 
-	public var leapEnabled : boolean = false;
+	public var leapEnabledVerticalAxis : boolean = false;
+	public var leapEnabledHorizontalAxis : boolean = false;
+	public var leapEnabledFire : boolean = false;
 	public var hideMouse : boolean = false;
 	
 	static public var dead : boolean;
@@ -158,15 +160,30 @@ class SoldierController extends MonoBehaviour
 			{
 				// moveDir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 				// pxsLeap
-				if (leapEnabled == true)
-				{
-					moveDir = new Vector3(pxsLeapInput.GetHandAxis("Horizontal"),0,pxsLeapInput.GetHandAxis("Depth"));
+				var x : float = 0;
+				var z : float = 0;
 				
+				if (leapEnabledHorizontalAxis == true)
+				{
+					x = pxsLeapInput.GetHandAxisStep("Horizontal");
 				}
 				else
 				{
-					moveDir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+					x = Input.GetAxis("Horizontal");
 				}
+				
+				
+				if (leapEnabledVerticalAxis == true)
+				{
+					z = pxsLeapInput.GetHandAxisStep("Depth");
+				}
+				else
+				{
+					z = Input.GetAxis("Vertical");
+				}
+							
+				// moveDir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+				 moveDir = new Vector3(x, 0, z);
 				
 			}
 			else
@@ -206,16 +223,19 @@ class SoldierController extends MonoBehaviour
 		// pxs Leap Mod
 		// if leapenabled, check fire from leap
 		var fireLeap : boolean = false;
-		if (leapEnabled == true)
+		var aimLeap : boolean = false;
+		if (leapEnabledFire == true)
 		{
 			fireLeap = pxsLeapInput.GetHandGesture("Fire1") && weaponSystem.currentGun.freeToShoot && !dead && !inAir;
-			// print(pxsLeapInput.FingersCount.ToString());
+			// aimLeap = pxsLeapInput.GetHandGesture("RotationFire2") && !dead;
+			// print ("Aim Leap: " + aimLeap.ToString());
+
 		}
 		//Check if the user if firing the weapon
 		fire = fireLeap || (Input.GetButton("Fire1") && weaponSystem.currentGun.freeToShoot && !dead && !inAir);
 		
 		//Check if the user is aiming the weapon
-		aim = Input.GetButton("Fire2") && !dead;
+		aim = aimLeap || (Input.GetButton("Fire2") && !dead);
 		
 		idleTimer += Time.deltaTime;
 		

@@ -16,7 +16,7 @@ class GUIOptimizer extends MonoBehaviour
 		if(evt.type == EventType.Repaint)
 		{
 			if(hudWeapons != null) hudWeapons.DrawGUI(evt);
-			if(sarge != null) sarge.DrawGUI(evt);
+			if(sarge != null) sarge.DrawGUI(evt);			
 		}
 	}
 }
